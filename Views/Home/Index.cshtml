@@ -21,30 +21,72 @@
 }
 @*@Html.Partial("~/Views/OpenWeatherMapMvc/Weather.cshtml")*@
 
+<h1>Weather Description</h1>
+<h2>Citi: @(Model.City.name)</h2>
+<h2>Country: @(Model.City.country)</h2>
 
-<table class="col-md-4 table table-striped table-hover table-bordered">
-    <tr>
-        <th>Weather Description</th>
-    </tr>
-    <tr>
-        <td>Citi: @(Model.responseWeather.name ?? string.Empty)</td>
-    </tr>
-    <tr>
-        <td>Country: @(Model.responseWeather.sys.country ?? string.Empty)</td>
-    </tr>
-    <tr>
-        <td>Wind: @(Model.responseWeather.wind.speed.ToString() ?? string.Empty) Km</td>
-    </tr>
-    <tr>
-        <td>Current Temperature: @(Model.responseWeather.main.temp.ToString() ?? string.Empty) °C</td>
-    </tr>
-    <tr>
-        <td>Humidity: @(Model.responseWeather.main.humidity.ToString() ?? string.Empty)</td>
-    </tr>
-    <tr>
-        <td>Weather: @(Model.responseWeather.weather[0].description ?? string.Empty)</td>
-    </tr>
+<div class="row">
+    @*@for (int i = 0; i < 5; i++)
+    {*@
+    @for (int i = 0; i < 5; i++)
+    {
+        @*<input type="button" class="col-md-2 btn btn-primary" value="@Model.ModelDay.Date[i]" onclick="location.href'@Url.Action("GetWeather", "Home", new {date = Model.ModelDay.Date[i]})'"/>*@
+             @Ajax.ActionLink($"{Model.ModelDay.Date[i]}", "GetWeather", new { date = Model.ModelDay.Date[i] }, new AjaxOptions { UpdateTargetId = "result" }, new {@class = "col-md-2 btn btn-primary" })
 
+    }
+    @* }*@
+</div>
+
+<table class="table table-striped table-hover table-bordered" id="result">
+
+
+    <tr>
+
+        <th class="col-md-2">
+            Date: @DateTime.Parse(Model.ModelDay.ListWhetherInDay[0].dt_txt).ToString("yyyy-MM-dd")
+        </th>
+        @foreach (var item in Model.ModelDay.ListWhetherInDay)
+        {
+            <th class="col-md-1">
+                @DateTime.Parse(item.dt_txt).ToString("HH:mm")
+            </th>
+        }
+    </tr>
+    <tr>
+        <td class="col-md-2">
+            Temperature:
+        </td>
+        @foreach (var item in Model.ModelDay.ListWhetherInDay)
+        {
+            <td class="col-md-1">
+                @(item.main.temp.ToString() ?? string.Empty) °C
+            </td>
+        }
+    </tr>
+    <tr>
+        <td class="col-md-2">Humidity:</td>
+
+        @foreach (var item in Model.ModelDay.ListWhetherInDay)
+        {
+            <td class="col-md-1">@(item.main.humidity.ToString() ?? string.Empty)</td>
+        }
+    </tr>
+    <tr>
+        <td class="col-md-2">Wind:</td>
+        @foreach (var item in Model.ModelDay.ListWhetherInDay)
+        {
+            <td class="col-md-1">@(item.wind.speed.ToString() ?? string.Empty)</td>
+        }
+
+    </tr>
+    <tr>
+        <td class="col-md-2">Weather:</td>
+        @foreach (var item in Model.ModelDay.ListWhetherInDay)
+        {
+            <td class="col-md-1">@(item.weather[0].description ?? string.Empty)</td>
+        }
+
+    </tr>
 </table>
 
 @section Scripts {
